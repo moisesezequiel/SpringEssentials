@@ -1,6 +1,7 @@
 package academy.devdojo.controller;
 
 import academy.devdojo.domain.Anime;
+import academy.devdojo.service.AnimeService;
 import academy.devdojo.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -17,13 +18,14 @@ import java.util.List;
 @AllArgsConstructor
 public class AnimeController {
      private DateUtil dateUtil;
+    private AnimeService animeService;
     //  @Autowired  NJECAO DE DEPENDENCIA nao indicado, indicado mesmo iniciar no construtor
    // private DateUtil dateUtil; I
 
-    @GetMapping(path="list")
+    @GetMapping
     public List<Anime> list(){
         log.info(dateUtil.formatLocalDate(LocalDateTime.now()));
-        return List.of(new Anime("Berserk"), new Anime("Pokemon"),new Anime("Boku no hero"));
+        return animeService.listAll();
     }
     
 }

@@ -1,16 +1,16 @@
 package academy.devdojo.controller;
 
 import academy.devdojo.domain.Anime;
+import academy.devdojo.dto.AnimePostRequestBody;
+import academy.devdojo.dto.AnimePutRequestBody;
 import academy.devdojo.service.AnimeService;
 import academy.devdojo.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,20 +21,40 @@ import java.util.List;
 @AllArgsConstructor
 public class AnimeController {
      private DateUtil dateUtil;
+    @Autowired
     private AnimeService animeService;
-    //  @Autowired  NJECAO DE DEPENDENCIA nao indicado, indicado mesmo iniciar no construtor
+
+	//  @Autowired  NJECAO DE DEPENDENCIA nao indicado, indicado mesmo iniciar no construtor
    // private DateUtil dateUtil; I
 
     @GetMapping
     public ResponseEntity<List<Anime>> list(){
-        log.info(dateUtil.formatLocalDate(LocalDateTime.now()));
+      //  log.info(dateUtil.formatLocalDate(LocalDateTime.now()));
       //  return  new ResponseEntity<>(animeService.listAll(), HttpStatus.OK) ;
         return   ResponseEntity.ok(animeService.listAll()) ;
     }
 
     @GetMapping(path = "/{id}")
     public ResponseEntity <Anime> findById(@PathVariable long id){
-        return   ResponseEntity.ok(animeService.findById(id)) ;
+        return   ResponseEntity.ok(animeService.findByIdOrThrowBadRequestException(id)) ;
     }
-    
+
+    @PostMapping
+    //@ResponseStatus(HttpStatus.CREATED) opcional aqui ou como parametro dentro do retorno
+    public ResponseEntity<Anime>save(@RequestBody AnimePostRequestBody animePostRequestBody){
+        return new ResponseEntity<>(animeService.save(animePostRequestBody),HttpStatus.CREATED);
+    }
+
+    @DeleteMapping(path = "/{id}")
+    //deletando nao e necessario retorno
+    public ResponseEntity <Void> delete(@PathVariable long id){
+        animeService.delete(id);
+        return  new  ResponseEntity<>(HttpStatus.NO_CONTENT) ;
+    }//Response so declarando no content
+
+    @PutMapping
+    public ResponseEntity <Void> replace(@RequestBody AnimePutRequestBody animePutRequestBody){
+        animeService.replace(animePutRequestBody);
+        return  new  ResponseEntity<>(HttpStatus.NO_CONTENT) ;
+    }
 }

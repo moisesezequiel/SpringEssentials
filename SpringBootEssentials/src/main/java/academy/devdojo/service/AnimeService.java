@@ -3,6 +3,7 @@ package academy.devdojo.service;
 import academy.devdojo.domain.Anime;
 import academy.devdojo.dto.AnimePostRequestBody;
 import academy.devdojo.dto.AnimePutRequestBody;
+import academy.devdojo.exception.AnimeException;
 import academy.devdojo.mapper.AnimeMapper;
 import academy.devdojo.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
@@ -28,7 +29,7 @@ public class AnimeService {
     }
 
     public Anime findByIdOrThrowBadRequestException(Long id){
-        return animeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Anime not Found"));
+        return animeRepository.findById(id).orElseThrow(() -> new AnimeException("Anime not Found"));
         //retorna um possivel anime com base no id que foi passado ou lanca uma requisao de anime nao encontrado
 
     }

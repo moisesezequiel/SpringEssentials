@@ -3,6 +3,7 @@ package academy.devdojo.service;
 import academy.devdojo.domain.Anime;
 import academy.devdojo.dto.AnimePostRequestBody;
 import academy.devdojo.dto.AnimePutRequestBody;
+import academy.devdojo.mapper.AnimeMapper;
 import academy.devdojo.repository.AnimeRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,7 +30,8 @@ public class AnimeService {
     }
 
     public Anime save(AnimePostRequestBody animePostRequestBody) {
-        return animeRepository.save(Anime.builder().name(animePostRequestBody.getName()).build());
+        ;
+        return animeRepository.save(AnimeMapper.INSTANCE.toAnime(animePostRequestBody));
     }
 
     public void delete(long id) {
@@ -40,9 +42,8 @@ public class AnimeService {
 
        Anime savedAnime= findByIdOrThrowBadRequestException(animePutRequestBody.getId());
 
-        Anime anime = Anime.builder()
-                .id(savedAnime.getId())
-                .name(animePutRequestBody.getName()).build();
+        Anime anime =AnimeMapper.INSTANCE.toAnime(animePutRequestBody);
+        anime.setId(savedAnime.getId());
 
         animeRepository.save(anime);
 

@@ -23,6 +23,10 @@ public class AnimeService {
         return animeRepository.findAll();
     }
 
+    public List<Anime> findByName(String name){
+        return animeRepository.findByName(name);
+    }
+
     public Anime findByIdOrThrowBadRequestException(Long id){
         return animeRepository.findById(id).orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST,"Anime not Found"));
         //retorna um possivel anime com base no id que foi passado ou lanca uma requisao de anime nao encontrado

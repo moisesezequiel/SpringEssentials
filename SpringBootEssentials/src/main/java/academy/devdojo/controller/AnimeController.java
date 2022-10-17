@@ -8,6 +8,8 @@ import academy.devdojo.util.DateUtil;
 import lombok.AllArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -29,10 +31,10 @@ public class AnimeController {
    // private DateUtil dateUtil; I
 
     @GetMapping
-    public ResponseEntity<List<Anime>> list(){
+    public ResponseEntity<Page<Anime>> list(Pageable pageable){
       //  log.info(dateUtil.formatLocalDate(LocalDateTime.now()));
       //  return  new ResponseEntity<>(animeService.listAll(), HttpStatus.OK) ;
-        return   ResponseEntity.ok(animeService.listAll()) ;
+        return   ResponseEntity.ok(animeService.listAll(pageable)) ;
     }
 
     @GetMapping(path = "/{id}")
@@ -47,7 +49,7 @@ public class AnimeController {
 
     @PostMapping
     //@ResponseStatus(HttpStatus.CREATED) opcional aqui ou como parametro dentro do retorno
-    public ResponseEntity<Anime>save(@RequestBody  @Valid AnimePostRequestBody animePostRequestBody){
+    public ResponseEntity<Anime>save(@RequestBody  @Valid    AnimePostRequestBody animePostRequestBody){
         return new ResponseEntity<>(animeService.save(animePostRequestBody),HttpStatus.CREATED);
     }
 

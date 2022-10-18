@@ -2,8 +2,7 @@ package academy.devdojo.client;
 
 import academy.devdojo.domain.Anime;
 import org.springframework.core.ParameterizedTypeReference;
-import org.springframework.http.HttpMethod;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.web.client.RestTemplate;
 
 import java.util.Arrays;
@@ -22,11 +21,36 @@ public class SpringClient {
         System.out.println("Animes");
         System.out.println(Arrays.toString(animes));
 
-
-        ResponseEntity<List<Anime>> exchange = new RestTemplate().exchange("http://localhost:8080/animes/all", HttpMethod.GET, null,
+        //Metodo de Get para busca de toda listagem
+        ResponseEntity<List<Anime>> exchange = new RestTemplate().exchange("http://localhost:8080/animes/all",
+                HttpMethod.GET,
+                null,
                 new ParameterizedTypeReference<List<Anime>>() {});
-
         System.out.println("Exchange");
         System.out.println(exchange.getBody());
+
+        //METODO POST
+//        Anime dota = Anime.builder().name("dota").build();
+//        Anime save = new RestTemplate().postForObject("http://localhost:8080/animes/",dota, Anime.class);
+//        System.out.println("Anime salvo");
+//        System.out.println(save);
+
+        //METODO POST Exchange
+        Anime samurai = Anime.builder().name("Goku").build();
+        ResponseEntity<Anime> save = new RestTemplate().exchange("http://localhost:8080/animes/",
+                HttpMethod.POST,new HttpEntity<>(samurai,createadJsonHeader())
+                ,Anime.class);
+
+        System.out.println("Anime salvo");
+            System.out.println(save);
+
+    }
+
+    private static HttpHeaders createadJsonHeader(){ //usar dentro do httpEntity
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
+        headers.setBearerAuth("Token");
+        return  headers;
+
     }
 }

@@ -10,7 +10,7 @@ import java.util.List;
 
 public class SpringClient {
     public static void main(String[] args) {
-        ResponseEntity<Anime> entity = new RestTemplate().getForEntity("http://localhost:8080/animes/30", Anime.class);
+        ResponseEntity<Anime> entity = new RestTemplate().getForEntity("http://localhost:8080/animes/31", Anime.class);
         System.out.println(entity);
 
 
@@ -41,8 +41,31 @@ public class SpringClient {
                 HttpMethod.POST,new HttpEntity<>(samurai,createadJsonHeader())
                 ,Anime.class);
 
-        System.out.println("Anime salvo");
+            System.out.println("Anime salvo");
             System.out.println(save);
+
+
+        //METODO PUT Exchange
+        Anime atualizado = save.getBody();
+        atualizado.setName("Tokio");
+        ResponseEntity<Void> update = new RestTemplate().exchange("http://localhost:8080/animes/",
+                HttpMethod.PUT
+                ,new HttpEntity<>(atualizado)
+                ,Void.class);
+
+        System.out.println("Anime ATUALIZADO");
+        System.out.println(update);
+
+
+        //METODO PUT Exchange
+        ResponseEntity<Void> delete = new RestTemplate().exchange("http://localhost:8080/animes/{id}",
+                HttpMethod.DELETE
+                ,null
+                , Void.class
+                ,atualizado.getId());
+
+        System.out.println("Anime DELETADO");
+        System.out.println(delete);
 
     }
 
